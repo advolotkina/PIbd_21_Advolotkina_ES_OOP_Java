@@ -1,10 +1,18 @@
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * Created by Ekaterina Advolotkina on 27.10.2017.
  */
 public class Ocean {
     ClassArray<IAnimal> ocean;
+    ArrayList<ClassArray<IAnimal>> oceanLevels;
+
+    public int getCurrentLevel() {
+        return currentLevel;
+    }
+
+    int currentLevel;
 
     int countPlaces = 20;
 
@@ -12,19 +20,40 @@ public class Ocean {
 
     int placeSizeHeight = 100;
 
+
     public Ocean()
     {
         ocean = new ClassArray<IAnimal>(countPlaces, null);
     }
 
+    public Ocean(int countLevels){
+        oceanLevels = new ArrayList<ClassArray<IAnimal>>();
+        for(int i = 0; i < countLevels;i++){
+            ocean = new ClassArray<IAnimal>(countPlaces,null);
+            oceanLevels.add(ocean);
+        }
+    }
+
+    public void LevelUp(){
+        if(currentLevel + 1 < oceanLevels.size()){
+            currentLevel++;
+        }
+    }
+
+    public void LevelDown(){
+        if(currentLevel > 0){
+            currentLevel--;
+        }
+    }
+
     public int PutFishInOcean(IAnimal fish)
     {
-        return ocean.plus(fish);
+        return oceanLevels.get(currentLevel).plus(fish);
     }
 
     public IAnimal GetFishFromOcean(int n)
     {
-        return ocean.minus(n);
+        return oceanLevels.get(currentLevel).minus(n);
     }
 
     private void DrawOcean(Graphics g)
@@ -46,7 +75,7 @@ public class Ocean {
         DrawOcean(g);
         for(int i = 0; i < countPlaces; i++)
         {
-            IAnimal fish = ocean.getObject(i);
+            IAnimal fish = oceanLevels.get(currentLevel).getObject(i);
 
             if (fish != null)
             {

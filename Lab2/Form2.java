@@ -16,9 +16,11 @@ public class Form2 extends JFrame {
     private JPanel oceanPanel;
     private JPanel rootPanel;
     private JPanel getPanel;
+    private JList list1;
+    private JButton buttonDown;
+    private JButton buttonUp;
 
-    private JPanel panel;
-    Ocean ocean;
+
     @Override
     public void paintComponents(Graphics g) {
         super.paintComponents(g);
@@ -26,14 +28,23 @@ public class Form2 extends JFrame {
 
     }
 
+    Ocean ocean;
 
     public Form2(){
         setContentPane(rootPanel);
         setVisible(true);
         this.setSize(1000, 600);
-        ocean = new Ocean();
-        Draw();
+        ocean = new Ocean(5);
+        DefaultListModel listModel = new DefaultListModel();
+            for (int i = 1; i < 6; i++) {
+
+                listModel.addElement("Уровень " + i);
+            }
+            list1.setModel(listModel);
+        list1.setSelectedIndex(ocean.getCurrentLevel());
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        Draw();
+
         sharkButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -70,19 +81,23 @@ public class Form2 extends JFrame {
         getButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try{
+                    try{
+                    if(list1.getSelectedIndex() > -1) {
                     int index = Integer.parseInt(textField1.getText());
                     IAnimal fish = ocean.GetFishFromOcean(index);
-                    if (fish != null)
-                    {
+                    if (fish != null) {
                         Graphics gr = getPanel.getGraphics();
                         fish.setPosition(40, 20);
                         fish.draw(gr);
                         Draw();
+                    } else{
+                        JOptionPane.showMessageDialog(oceanPanel,"Извинте, на этом месте нет акулы");
                     }
-                } catch (Exception ex){
 
                 }
+                    }catch (NumberFormatException ex){
+
+                    }
             }
         });
 
@@ -92,11 +107,29 @@ public class Form2 extends JFrame {
                 paintComponents(oceanPanel.getGraphics());
             }
         });
+        buttonDown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ocean.LevelDown();
+                list1.setSelectedIndex(ocean.getCurrentLevel());
+                Draw();
+            }
+        });
+        buttonUp.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ocean.LevelUp();
+                list1.setSelectedIndex(ocean.getCurrentLevel());
+                Draw();
+            }
+        });
     }
     private void Draw()
     {
-        Graphics gr = oceanPanel.getGraphics();
-        ocean.Draw(gr,oceanPanel.getWidth(),oceanPanel.getHeight());
+        if(list1.getSelectedIndex() > -1) {
+            Graphics gr = oceanPanel.getGraphics();
+            ocean.Draw(gr, oceanPanel.getWidth(), oceanPanel.getHeight());
+        }
     }
 
     public static void main(String[] args) {
