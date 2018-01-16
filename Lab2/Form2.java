@@ -11,7 +11,6 @@ import java.awt.event.ComponentEvent;
 public class Form2 extends JFrame {
     private JTextField textField1;
     private JButton sharkButton;
-    private JButton tigersharkButton;
     private JButton getButton;
     private JPanel oceanPanel;
     private JPanel rootPanel;
@@ -19,6 +18,8 @@ public class Form2 extends JFrame {
     private JList list1;
     private JButton buttonDown;
     private JButton buttonUp;
+    private JFrame frame;
+    SelectSharkPanel dialog;
 
 
     @Override
@@ -31,6 +32,10 @@ public class Form2 extends JFrame {
     Ocean ocean;
 
     public Form2(){
+        frame = new JFrame();
+        frame.setBounds(100, 100, 900, 518);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.getContentPane().setLayout(null);
         setContentPane(rootPanel);
         setVisible(true);
         this.setSize(1000, 600);
@@ -48,32 +53,17 @@ public class Form2 extends JFrame {
         sharkButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Color newColor = JColorChooser.showDialog(null, "Выберите цвет",Color.gray);
-                if (newColor == null) {
-                    return;
-                }
-                    IAnimal fish = new Shark(10, 10, 300, newColor);
-                    int place = ocean.PutFishInOcean(fish);
-
-                    Draw();
-                    JOptionPane.showMessageDialog(oceanPanel,"Ваше место: " + place);
-            }
-        });
-        tigersharkButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                    Color newColor = JColorChooser.showDialog(null, "Выберите цвет",Color.gray);
-                if (newColor == null) {
-                    return;
-                } else{
-                    Color newColor2 = JColorChooser.showDialog(null, "Выберите цвет",Color.black);
-                    if(newColor2 == null){
-                        return;
-                    } else{
-                        IAnimal fish = new TigerShark(10, 10, 300, newColor, newColor2);
-                        int place = ocean.PutFishInOcean(fish);
+                dialog = new SelectSharkPanel(frame);
+                if (dialog.Execute()) {
+                    IAnimal shark = dialog.GetShark();
+                    if (shark != null) {
+                        int place = ocean.PutFishInOcean(shark);
                         Draw();
-                        JOptionPane.showMessageDialog(oceanPanel,"Ваше место: " + place);
+                        JOptionPane.showMessageDialog(null, "Место акулы: " + (place + 1), "",
+                                JOptionPane.INFORMATION_MESSAGE);
+                    }else{
+                        JOptionPane.showMessageDialog(null, "Что-то пошло не так", "",
+                                JOptionPane.INFORMATION_MESSAGE);
                     }
                 }
             }

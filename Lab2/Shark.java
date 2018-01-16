@@ -5,6 +5,7 @@ import java.util.Random;
  * Created by Ekaterina Advolotkina on 12.10.2017.
  */
 public class Shark extends CartilaginousFish {
+
     public Shark(int maxNumberOfVictims, int hoursNeededToSleep, double weight, Color color)
     {
         this.setMaxNumberOfVictims(maxNumberOfVictims);
@@ -112,5 +113,10 @@ public class Shark extends CartilaginousFish {
         {
             super.setMaxNumberOfVictims(8);
         }
+    }
+
+    @Override
+    public void setBodyPattern(Color bodyPattern) {
+        super.setBodyPattern(bodyPattern);
     }
 }
