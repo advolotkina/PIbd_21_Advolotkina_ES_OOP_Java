@@ -66,6 +66,9 @@ public class Shark extends CartilaginousFish {
         startPosY = startPosY + 10*rand.nextInt(4);
         draw(g);
     }
+
+
+
     @Override
     public double getWeight() {
         return super.getWeight();
@@ -118,5 +121,25 @@ public class Shark extends CartilaginousFish {
     @Override
     public void setBodyPattern(Color bodyPattern) {
         super.setBodyPattern(bodyPattern);
+    }
+
+    public Shark(String info)
+    {
+        String[] strs = info.split(";");
+        if(strs.length == 4)
+        {
+            setMaxNumberOfVictims(Integer.parseInt(strs[0]));
+            setHoursNeededToSleep(Integer.parseInt(strs[1]));
+            setWeight(Double.parseDouble(strs[2]));
+            setBodyPattern(Color.decode(strs[3]));
+        }
+        this.sleptHours = 0;
+        this.victims = 0;
+    }
+
+    @Override
+    public String getInfo() {
+        String hex = "#"+Integer.toHexString(getBodyPattern().getRGB()).substring(2);
+        return getMaxNumberOfVictims() + ";" + getHoursNeededToSleep() + ";" + getWeight() + ";" + hex;
     }
 }

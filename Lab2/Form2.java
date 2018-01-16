@@ -1,9 +1,11 @@
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.io.File;
 
 /**
  * Created by Ekaterina Advolotkina on 26.10.2017.
@@ -113,6 +115,57 @@ public class Form2 extends JFrame {
                 Draw();
             }
         });
+
+        JMenuBar menuBar = new JMenuBar();
+        this.setJMenuBar(menuBar);
+        JMenu menu = new JMenu("Файл");
+        menuBar.add(menu);
+
+        JMenuItem menuItemOpen = new JMenuItem("Загрузить");
+        menuItemOpen.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                JFileChooser fileChooser = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter("txt file", "txt", "text");
+                fileChooser.setFileFilter(filter);
+
+                if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    File file = fileChooser.getSelectedFile();
+                        if (ocean.LoadData(file.getAbsolutePath())) {
+                            JOptionPane.showMessageDialog(frame, "Загрузили", "", JOptionPane.INFORMATION_MESSAGE);
+                        } else {
+                            JOptionPane.showMessageDialog(frame, "Что-то пошло не так. Не загрузили.", "", JOptionPane.ERROR_MESSAGE);
+                        }
+                    Draw();
+                }
+            }
+        });
+        menu.add(menuItemOpen);
+
+        JMenuItem menuItemSave = new JMenuItem("Сохранить");
+        menuItemSave.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter("txt file", "txt", "text");
+                fileChooser.setFileFilter(filter);
+
+                if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    File file = fileChooser.getSelectedFile();
+                    String path = file.getAbsolutePath();
+
+                    if (!file.getAbsolutePath().endsWith(".txt")) {
+                        path += ".txt";
+                    }
+                    if (ocean.SaveData(path)) {
+                        JOptionPane.showMessageDialog(frame, "Сохранили", "", JOptionPane.INFORMATION_MESSAGE);
+                        return;
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "Что-то пошло не так. Не сохранили", "", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
+            }
+        });
+        menu.add(menuItemSave);
     }
     private void Draw()
     {

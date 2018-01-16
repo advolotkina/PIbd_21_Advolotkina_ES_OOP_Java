@@ -66,4 +66,25 @@ public class TigerShark extends Shark {
             g.drawOval(startPosX + 4 + i, startPosY + 27 + i, 3, 6);
         }
     }
+
+    public TigerShark(String info)
+    {
+        super(info);
+        String[] strs = info.split(";");
+        if(strs.length == 6)
+        {
+            setMaxNumberOfVictims(Integer.parseInt(strs[0]));
+            setHoursNeededToSleep(Integer.parseInt(strs[1]));
+            setWeight(Double.parseDouble(strs[2]));
+            setBodyPattern(Color.decode(strs[3]));
+            setHumansKilled(Integer.parseInt(strs[4]));
+            setDopColor(Color.decode(strs[5]));
+        }
+    }
+
+    public String getInfo() {
+        String hex = "#"+Integer.toHexString(getBodyPattern().getRGB()).substring(2);
+        String hex2 = "#"+Integer.toHexString(getDopColor().getRGB()).substring(2);
+        return getMaxNumberOfVictims() + ";" + getHoursNeededToSleep() + ";" + getWeight() + ";" + hex+ ";"+getHumansKilled()+";" + hex2;
+    }
 }
