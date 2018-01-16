@@ -16,10 +16,9 @@ public class ClassArray<T> {
         maxCount = sizes;
     }
 
-    public int plus(T fish)
-    {
+    public int plus(T fish) throws OceanOverFlowException {
         if(places.size()== maxCount){
-            return -1;
+            throw new OceanOverFlowException();
         }
         for(int i = 0; i < places.size(); i++)
         {
@@ -33,14 +32,13 @@ public class ClassArray<T> {
         return places.size()-1;
     }
 
-    public  T minus(int index)
-    {
+    public  T minus(int index) throws OceanIndexOutOfRangeException {
         if(places.containsKey(index)){
             T fish = places.get(index);
             places.remove(index);
             return fish;
         }
-        return defaultValue;
+        throw new OceanIndexOutOfRangeException();
     }
 
     private boolean CheckFreePlace(int index)

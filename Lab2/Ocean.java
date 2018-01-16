@@ -51,13 +51,11 @@ public class Ocean {
         }
     }
 
-    public int PutFishInOcean(IAnimal fish)
-    {
+    public int PutFishInOcean(IAnimal fish) throws OceanOverFlowException {
         return oceanLevels.get(currentLevel).plus(fish);
     }
 
-    public IAnimal GetFishFromOcean(int n)
-    {
+    public IAnimal GetFishFromOcean(int n) throws OceanIndexOutOfRangeException {
         return oceanLevels.get(currentLevel).minus(n);
     }
 
@@ -141,7 +139,7 @@ public class Ocean {
         }
     }
 
-    public boolean LoadData(String fileName)  {
+    public boolean LoadData(String fileName) throws OceanOverFlowException {
         File file = new File(fileName);
         if (!file.exists()) {
             return false;
