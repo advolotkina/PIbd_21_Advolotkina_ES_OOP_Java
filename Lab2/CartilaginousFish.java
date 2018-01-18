@@ -108,4 +108,6 @@ public abstract class CartilaginousFish implements IAnimal {
     {
 
     }
+
+    public abstract String getInfo();
 }

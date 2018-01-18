@@ -4,7 +4,8 @@ import java.util.Random;
 /**
  * Created by Ekaterina Advolotkina on 12.10.2017.
  */
-public class Shark extends CartilaginousFish {
+public class Shark extends CartilaginousFish implements Comparable<Shark> {
+
     public Shark(int maxNumberOfVictims, int hoursNeededToSleep, double weight, Color color)
     {
         this.setMaxNumberOfVictims(maxNumberOfVictims);
@@ -65,6 +66,9 @@ public class Shark extends CartilaginousFish {
         startPosY = startPosY + 10*rand.nextInt(4);
         draw(g);
     }
+
+
+
     @Override
     public double getWeight() {
         return super.getWeight();
@@ -112,5 +116,97 @@ public class Shark extends CartilaginousFish {
         {
             super.setMaxNumberOfVictims(8);
         }
+    }
+
+    @Override
+    public void setBodyPattern(Color bodyPattern) {
+        super.setBodyPattern(bodyPattern);
+    }
+
+    public Shark(String info)
+    {
+        String[] strs = info.split(";");
+        if(strs.length == 4)
+        {
+            setMaxNumberOfVictims(Integer.parseInt(strs[0]));
+            setHoursNeededToSleep(Integer.parseInt(strs[1]));
+            setWeight(Double.parseDouble(strs[2]));
+            setBodyPattern(Color.decode(strs[3]));
+        }
+        this.sleptHours = 0;
+        this.victims = 0;
+    }
+
+
+    @Override
+    public String getInfo() {
+        String hex = "#"+Integer.toHexString(getBodyPattern().getRGB()).substring(2);
+        return getMaxNumberOfVictims() + ";" + getHoursNeededToSleep() + ";" + getWeight() + ";" + hex;
+    }
+
+    @Override
+    public int compareTo(Shark o) {
+        if (o == null)
+        {
+            return 1;
+        }
+        if (maxNumberOfVictims != o.getMaxNumberOfVictims())
+        {
+            return Integer.compare(maxNumberOfVictims,o.getMaxNumberOfVictims());
+        }
+        if (hoursNeededToSleep != o.getHoursNeededToSleep())
+        {
+            return Integer.compare(hoursNeededToSleep,o.getHoursNeededToSleep());
+        }
+        if (weight != o.getWeight())
+        {
+            return Double.compare(weight,o.getWeight());
+        }
+        if (bodyPattern.getRGB() != o.getBodyPattern().getRGB())
+        {
+            return Integer.compare(bodyPattern.getRGB(),o.getBodyPattern().getRGB());
+        }
+        return 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return ((Integer)maxNumberOfVictims).hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj==null){
+            return false;
+        }
+        if(!(obj instanceof Shark)){
+            return false;
+        }
+        Shark sharkObj=(Shark)obj;
+        return equals(sharkObj);
+    }
+
+    public boolean equals(Shark o){
+        if (o == null)
+        {
+            return false;
+        }
+        if (maxNumberOfVictims != o.getMaxNumberOfVictims())
+        {
+            return false;
+        }
+        if (hoursNeededToSleep != o.getHoursNeededToSleep())
+        {
+            return false;
+        }
+        if (weight != o.getWeight())
+        {
+            return false;
+        }
+        if (bodyPattern.getRGB() != o.getBodyPattern().getRGB())
+        {
+            return false;
+        }
+        return true;
     }
 }
