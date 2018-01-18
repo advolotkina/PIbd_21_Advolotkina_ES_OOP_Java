@@ -4,7 +4,7 @@ import java.util.Random;
 /**
  * Created by Ekaterina Advolotkina on 12.10.2017.
  */
-public class Shark extends CartilaginousFish {
+public class Shark extends CartilaginousFish implements Comparable<Shark> {
 
     public Shark(int maxNumberOfVictims, int hoursNeededToSleep, double weight, Color color)
     {
@@ -137,9 +137,76 @@ public class Shark extends CartilaginousFish {
         this.victims = 0;
     }
 
+
     @Override
     public String getInfo() {
         String hex = "#"+Integer.toHexString(getBodyPattern().getRGB()).substring(2);
         return getMaxNumberOfVictims() + ";" + getHoursNeededToSleep() + ";" + getWeight() + ";" + hex;
+    }
+
+    @Override
+    public int compareTo(Shark o) {
+        if (o == null)
+        {
+            return 1;
+        }
+        if (maxNumberOfVictims != o.getMaxNumberOfVictims())
+        {
+            return Integer.compare(maxNumberOfVictims,o.getMaxNumberOfVictims());
+        }
+        if (hoursNeededToSleep != o.getHoursNeededToSleep())
+        {
+            return Integer.compare(hoursNeededToSleep,o.getHoursNeededToSleep());
+        }
+        if (weight != o.getWeight())
+        {
+            return Double.compare(weight,o.getWeight());
+        }
+        if (bodyPattern.getRGB() != o.getBodyPattern().getRGB())
+        {
+            return Integer.compare(bodyPattern.getRGB(),o.getBodyPattern().getRGB());
+        }
+        return 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return ((Integer)maxNumberOfVictims).hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj==null){
+            return false;
+        }
+        if(!(obj instanceof Shark)){
+            return false;
+        }
+        Shark sharkObj=(Shark)obj;
+        return equals(sharkObj);
+    }
+
+    public boolean equals(Shark o){
+        if (o == null)
+        {
+            return false;
+        }
+        if (maxNumberOfVictims != o.getMaxNumberOfVictims())
+        {
+            return false;
+        }
+        if (hoursNeededToSleep != o.getHoursNeededToSleep())
+        {
+            return false;
+        }
+        if (weight != o.getWeight())
+        {
+            return false;
+        }
+        if (bodyPattern.getRGB() != o.getBodyPattern().getRGB())
+        {
+            return false;
+        }
+        return true;
     }
 }
