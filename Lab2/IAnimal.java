@@ -17,4 +17,6 @@ public interface IAnimal {
     void breath();
 
     void makeNoise();
+
+    String getInfo();
 }

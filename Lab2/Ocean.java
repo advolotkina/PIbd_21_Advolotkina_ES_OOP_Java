@@ -1,4 +1,9 @@
 import java.awt.*;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 /**
@@ -46,13 +51,11 @@ public class Ocean {
         }
     }
 
-    public int PutFishInOcean(IAnimal fish)
-    {
+    public int PutFishInOcean(IAnimal fish) throws OceanOverFlowException {
         return oceanLevels.get(currentLevel).plus(fish);
     }
 
-    public IAnimal GetFishFromOcean(int n)
-    {
+    public IAnimal GetFishFromOcean(int n) throws OceanIndexOutOfRangeException {
         return oceanLevels.get(currentLevel).minus(n);
     }
 
@@ -83,5 +86,116 @@ public class Ocean {
                 fish.draw(g);
             }
         }
+    }
+
+    public boolean SaveData(String filename) {
+        File file = new File(filename);
+        if (file.exists()) {
+            file.delete();
+        }
+        try (FileOutputStream fileStream = new FileOutputStream(file)) {
+            try (BufferedOutputStream bs = new BufferedOutputStream(fileStream)) {
+                String s = "CountLeveles:" + oceanLevels.size() + System.lineSeparator();
+
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+                for (int i = 0; i < s.length(); i++) {
+                    bos.write(s.charAt(i));
+                }
+
+                byte[] info = bos.toByteArray();
+                fileStream.write(info, 0, info.length);
+
+                for (ClassArray<IAnimal> level : oceanLevels) {
+                    bos = new ByteArrayOutputStream();
+                    s = "Level" + System.lineSeparator();
+
+                    for (int i = 0; i < s.length(); i++) {
+                        bos.write(s.charAt(i));
+                    }
+                    info = bos.toByteArray();
+                    fileStream.write(info, 0, info.length);
+
+                    for (int i = 0; i < countPlaces; i++) {
+                        IAnimal shark = level.getObject(i);
+
+                        if (shark != null) {
+                            bos = new ByteArrayOutputStream();
+                            String sharkInfoStr = shark.getClass().getName() + ":" + shark.getInfo()
+                                    + System.lineSeparator();
+                            for (int j = 0; j < sharkInfoStr.length(); j++) {
+                                bos.write(sharkInfoStr.charAt(j));
+                            }
+                            info = bos.toByteArray();
+                            fileStream.write(info, 0, info.length);
+                        }
+                    }
+                }
+            }
+            fileStream.close();
+            return true;
+        } catch (IOException ex) {
+            return false;
+        }
+    }
+
+    public boolean LoadData(String fileName) throws OceanOverFlowException {
+        File file = new File(fileName);
+        if (!file.exists()) {
+            return false;
+        }
+        try (FileInputStream fileStream = new FileInputStream(fileName)) {
+            String s = "";
+            try (BufferedInputStream bs = new BufferedInputStream(fileStream)) {
+
+                Path path = Paths.get(file.getAbsolutePath());
+                byte[] b = new byte[fileStream.available()];
+                b = Files.readAllBytes(path);
+
+                ByteArrayInputStream bos = new ByteArrayInputStream(b);
+                String value = new String(b, StandardCharsets.UTF_8);
+
+                while (bos.read(b, 0, b.length) > 0) {
+                    s += value;
+                }
+
+                s = s.replace("\r", "");
+                String[] strs = s.split("\n");
+                if (strs[0].contains("CountLeveles")) {
+                    if (ocean != null) {
+                        oceanLevels.clear();
+                    }
+                    oceanLevels = new ArrayList<ClassArray<IAnimal>>();
+                } else
+                    return false;
+
+                int counter = -1;
+                for (int i = 0; i < strs.length; i++) {
+                    if (strs[i].startsWith("Level")) {
+                        counter++;
+                        oceanLevels.add(new ClassArray<IAnimal>(countPlaces, null));
+                    } else if (strs[i].startsWith("Shark")) {
+                        IAnimal shark = new Shark(strs[i].split(":")[1]);
+                        int number = oceanLevels.get(counter).plus(shark);
+                        if (number == -1) {
+                            return false;
+                        }
+                    } else if (strs[i].startsWith("TigerShark")) {
+                        IAnimal shark = new TigerShark(strs[i].split(":")[1]);
+                        int number = oceanLevels.get(counter).plus(shark);
+                        if (number == -1) {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        } catch (IOException ex) {
+            return false;
+        }
+    }
+
+    public void Sort() {
+        oceanLevels.sort(null);
     }
 }
