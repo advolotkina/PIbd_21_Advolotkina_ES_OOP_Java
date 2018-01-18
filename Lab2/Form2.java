@@ -24,6 +24,7 @@ public class Form2 extends JFrame {
     private JList list1;
     private JButton buttonDown;
     private JButton buttonUp;
+    private JButton sortButton;
     private JFrame frame;
     SelectSharkPanel dialog;
     Logger log;
@@ -194,6 +195,14 @@ public class Form2 extends JFrame {
             }
         });
         menu.add(menuItemSave);
+
+        sortButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ocean.Sort();
+                Draw();
+            }
+        });
     }
     private void Draw()
     {

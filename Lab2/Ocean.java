@@ -194,4 +194,8 @@ public class Ocean {
             return false;
         }
     }
+
+    public void Sort() {
+        oceanLevels.sort(null);
+    }
 }
